@@ -109,7 +109,7 @@ public class StaffManager implements CRUD<StaffMember>{
     
 	@Override
 	public String toString() {
-		return "Lista del personale:\n" + CRUD.listToString(list);
+		return "Lista del personale:" + CRUD.listToString(list);
 	}
 
 }

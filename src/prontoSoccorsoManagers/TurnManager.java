@@ -56,7 +56,7 @@ public class TurnManager implements CRUD<Turn> {
     
 	@Override
 	public String toString() {
-		return "Lista dei turni:\n" + CRUD.listToString(list);
+		return "Lista dei turni:" + CRUD.listToString(list);
 	}
 
     @Override

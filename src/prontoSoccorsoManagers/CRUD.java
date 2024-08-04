@@ -21,7 +21,7 @@ public interface CRUD<T>{
 		
 		int index = 0;
 		while(it.hasNext()) {
-			sb.append("\t" + (++index) + ". " + it.next());
+			sb.append("\n\t" + (++index) + ". " + it.next());
 			
 			if(it.hasNext()) //do not add newline char if there are no elements next
 				sb.append("\n");

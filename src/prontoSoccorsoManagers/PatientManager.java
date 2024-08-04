@@ -123,7 +123,7 @@ public class PatientManager implements CRUD<Patient>{
 	
 
 	public String toString() {
-		return "Lista pazienti:\n" + CRUD.listToString(list);
+		return "Lista pazienti:" + CRUD.listToString(list);
 	}
 	
     @Override

@@ -74,7 +74,7 @@ public class Patient extends Person {
 		DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yy");
 		return "Paziente: id=" + id + ", Nome=" + getName() + ", Cognome=" + getSurname() + 
 				", Ammesso=" + entryDate.format(format) + ", Dimesso=" + (exitDate==null?"N/A":exitDate.format(format)) +
-						", codice=" + code + ", Personale assegnato=\n" + CRUD.listToString(assignedStaff);
+						", codice=" + code + ", Personale assegnato=" + CRUD.listToString(assignedStaff);
 	}
 
 }

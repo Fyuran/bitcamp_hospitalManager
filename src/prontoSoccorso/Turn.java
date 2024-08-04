@@ -57,6 +57,6 @@ public class Turn {
 	public String toString() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 		return "Inizio turno= " + start.format(formatter) + ", Fine turno= "
-				+ end.format(formatter) + ", Personale assegnato=\n" + staffToString();
+				+ end.format(formatter) + ", Personale assegnato=" + staffToString();
 	}
 }

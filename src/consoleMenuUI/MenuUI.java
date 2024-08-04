@@ -66,17 +66,17 @@ public class MenuUI {
 	        System.out.println("Fai la tua scelta");
 
 	        if(scanner.hasNextInt()) {
-	        	int choice = scanner.nextInt();
+	        	int choice = scanner.nextInt() - 1;
 	        	scanner.nextLine(); //advance buffer
-	        	if(choice == (commands.size() + 1)) {
+	        	if(choice == commands.size()) {
 	        		System.out.println(Colors.toColor("Uscito da " + name, Colors.CYAN));
 	        		break;
 	        	}
-	        	try {
-	        		Command cmd = commands.get(choice-1);
+	        	if(choice >= 0  && choice < commands.size()) {
+	        		Command cmd = commands.get(choice);
 	        		System.out.println(Colors.toColor("Selezionato: " + cmd.name(), Colors.CYAN));
 	        		cmd.execute();
-	        	} catch (IndexOutOfBoundsException e) {
+	        	} else {
 	        		System.out.println(Colors.toColor("*Scelta non valida*", Colors.RED));
 	        	}
 	        } else {

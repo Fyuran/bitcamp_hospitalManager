@@ -108,9 +108,9 @@ public class PatientMenu {
 			return;
 		}
 		if(isAdmitted)
-			System.out.println("Lista Personale amesso:\n" + CRUD.listToString(manager.filter(p -> !p.isDismissed())));
+			System.out.println("Lista Personale amesso:" + CRUD.listToString(manager.filter(p -> !p.isDismissed())));
 		else
-			System.out.println("Lista Personale dimesso:\n" + CRUD.listToString(manager.filter(p -> p.isDismissed())));
+			System.out.println("Lista Personale dimesso:" + CRUD.listToString(manager.filter(p -> p.isDismissed())));
 	}
 	
 	private void deletePatientsMenu(boolean isAdmitted) {
@@ -121,13 +121,13 @@ public class PatientMenu {
 			
 			Patient patient = getElemByIndex(isAdmitted);
 			if(manager.remove(patient))
-				System.out.println(patient + " " + dismissedMsg);
+				System.out.println(dismissedMsg + " " + patient.getName());
 		});
 		dismissMenu.addCmd(comand + " per ID", ()->{
 			
 			Patient patient = getElemByID(isAdmitted);
 			if(manager.remove(patient))
-				System.out.println(patient + " " + dismissedMsg);
+				System.out.println(dismissedMsg + " " + patient.getName());
 		});
 		dismissMenu.showCmds();
 	}
@@ -154,10 +154,8 @@ public class PatientMenu {
 			patient.setSurname(params[1]);
 			patient.setCode(code);
 	
-			if(manager.update(patient)) {
-				System.out.println(modifiedMsg + " " + patient);
-				viewPatients(isAdmitted);
-			}
+			if(manager.update(patient))
+				System.out.println(modifiedMsg + " " + patient.getName());
 		});
 		editMenu.addCmd("Modifica per ID", ()->{
 			Patient patient = getElemByID(isAdmitted);
@@ -175,7 +173,7 @@ public class PatientMenu {
 			patient.setCode(code);
 	
 			if(manager.update(patient))
-				System.out.println(modifiedMsg + " " + patient);
+				System.out.println(modifiedMsg + " " + patient.getName());
 		});
 		
 		editMenu.showCmds();
@@ -191,12 +189,15 @@ public class PatientMenu {
 		
 		viewPatients(isAdmitted);
 		Patient chosen = null;
-		int choice = input.askInt(toColor("Inserire l'indice", Colors.PURPLE));
-		while(chosen == null) {
-			chosen = patients.get(choice-1);
-			if(chosen == null)
-				System.out.println(notFoundErrorMsg);
-		}
+		int choice = input.askInt(toColor("Inserire l'indice", Colors.PURPLE)) - 1;
+		if(choice >= 0 && choice < patients.size())
+			chosen = patients.get(choice);
+		
+		if(chosen == null) {
+			System.out.println(notFoundErrorMsg);
+			return null;
+		};
+
 		return chosen;
 	}
 
@@ -216,12 +217,13 @@ public class PatientMenu {
 		
 		viewPatients(isAdmitted);
 		Patient chosen = null;
+
 		String id = input.askLine(toColor("Inserire l'ID", Colors.PURPLE));
-		while(chosen == null) {
-			chosen = manager.get(id);
-			if(chosen == null)
-				System.out.println(notFoundErrorMsg);
-		}
+		chosen = manager.get(id);
+		if(chosen == null) {
+			System.out.println(notFoundErrorMsg);
+			return null;
+		};
 		return chosen;
 	}
 	

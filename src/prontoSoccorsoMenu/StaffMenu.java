@@ -24,7 +24,7 @@ public class StaffMenu {
 	
 	
 	public StaffMenu(StaffManager manager) {
-			
+		this.manager = manager;	
 		MenuUI menu = new MenuUI("Gestione Personale");
 		
 		menu.addCmd("Aggiungi personale", () -> addStaffMenu());
@@ -63,14 +63,22 @@ public class StaffMenu {
 		
 		MenuUI removeMenu = new MenuUI("Rimuovi Personale");
 		removeMenu.addCmd("Rimuovi per indice", ()->{
+			if(manager.isEmpty()) {
+				System.out.println(emptyListErrorMsg);
+				return;
+			}
 			System.out.println(manager);	
-			int choice = input.askInt(toColor("Inserire l'indice da rimuovere", Colors.PURPLE));
-			if(manager.remove(choice-1))
+			int choice = input.askInt(toColor("Inserire l'indice da rimuovere", Colors.PURPLE)) - 1;
+			if(manager.remove(choice))
 				System.out.println(removedMsg);
 			else
 				System.out.println(notFoundErrorMsg);
 		});
 		removeMenu.addCmd("Rimuovi per ID", ()->{
+			if(manager.isEmpty()) {
+				System.out.println(emptyListErrorMsg);
+				return;
+			}
 			System.out.println(manager);	
 			String id = input.askLine(toColor("Inserire l'ID da rimuovere", Colors.PURPLE));
 			if(manager.remove(id))
@@ -90,10 +98,14 @@ public class StaffMenu {
 		
 		MenuUI editMenu = new MenuUI("Modifica Personale");
 		editMenu.addCmd("Modifica per indice", ()->{
+			if(manager.isEmpty()) {
+				System.out.println(emptyListErrorMsg);
+				return;
+			}
 			System.out.println(manager);	
 			
-			int choice = input.askInt(toColor("Inserire l'indice da modificare", Colors.PURPLE));
-			StaffMember chosen = manager.get(choice-1);
+			int choice = input.askInt(toColor("Inserire l'indice da modificare", Colors.PURPLE)) - 1;
+			StaffMember chosen = manager.get(choice);
 			if(chosen == null) {
 				System.out.println(notFoundErrorMsg);
 				return;
@@ -107,12 +119,16 @@ public class StaffMenu {
 			
 
 			StaffMember edited = new StaffMember(params[0], params[1], chosen.getId(), params[2], params[3]);				
-			if(manager.update(choice-1, edited))
+			if(manager.update(choice, edited))
 				System.out.println(modifiedMsg);
 			else
 				System.out.println(notFoundErrorMsg);
 		});
 		editMenu.addCmd("Modifica per ID", ()->{
+			if(manager.isEmpty()) {
+				System.out.println(emptyListErrorMsg);
+				return;
+			}
 			System.out.println(manager);	
 			String id = input.askLine(toColor("Inserire l'ID da modificare", Colors.PURPLE));
 			StaffMember chosen = manager.get(id);
