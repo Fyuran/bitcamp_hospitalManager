@@ -7,7 +7,6 @@ import java.util.function.Predicate;
 import prontoSoccorso.MedCode;
 import prontoSoccorso.Patient;
 import prontoSoccorso.PatientId;
-import prontoSoccorso.StaffMember;
 
 public class PatientManager implements CRUD<Patient>{
 
@@ -105,7 +104,14 @@ public class PatientManager implements CRUD<Patient>{
 		}
 		return false;
 	}
-
+	public boolean update(Patient o) {
+		int index = list.indexOf(o);
+		if (index >= 0 && index < list.size()) {
+			list.set(index, o);
+			return true;
+		}
+		return false;
+	}
     @Override
     public boolean isEmpty() {
     	return list.size() == 0;

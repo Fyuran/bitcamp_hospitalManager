@@ -3,7 +3,6 @@ package prontoSoccorso;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import prontoSoccorsoManagers.CRUD;
@@ -21,6 +20,12 @@ public class Patient extends Person {
 		super(name, surname);
 		this.id = new PatientId();
 		this.entryDate = LocalDate.now();
+		this.code = code;
+	}
+	public Patient(String name, String surname, LocalDate entryDate, MedCode code) {
+		super(name, surname);
+		this.id = new PatientId();
+		this.entryDate = entryDate;
 		this.code = code;
 	}
 	
@@ -67,7 +72,7 @@ public class Patient extends Person {
 	@Override
 	public String toString() {
 		DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yy");
-		return "Paziente: id=" + id + 
+		return "Paziente: id=" + id + ", Nome=" + getName() + ", Cognome=" + getSurname() + 
 				", Ammesso=" + entryDate.format(format) + ", Dimesso=" + (exitDate==null?"N/A":exitDate.format(format)) +
 						", codice=" + code + ", Personale assegnato=\n" + CRUD.listToString(assignedStaff);
 	}

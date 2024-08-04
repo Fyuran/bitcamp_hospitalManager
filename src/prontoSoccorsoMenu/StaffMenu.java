@@ -1,8 +1,5 @@
 package prontoSoccorsoMenu;
 
-import java.util.List;
-import java.util.function.Predicate;
-
 import consoleMenuUI.Colors;
 import consoleMenuUI.MenuUI;
 import prontoSoccorso.StaffMember;

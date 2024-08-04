@@ -24,7 +24,8 @@ public class getInput {
 				scanner.nextLine();
 				break;
 			} else {
-				System.out.println("Inserire un numero valido");
+				System.out.println("\u001B[31mInserire un numero valido\u001B[0m");
+				scanner.nextLine();
 			}
 		}
 		return number;
@@ -36,9 +37,11 @@ public class getInput {
 		while(true) {
 			if(scanner.hasNextDouble()) {
 				number = scanner.nextDouble();
+				scanner.nextLine();
 				break;
 			} else {
-				System.out.println("Inserire un numero valido");
+				System.out.println("\u001B[31mInserire un numero valido\u001B[0m");
+				scanner.nextLine();
 			}
 		}
 		return number;
@@ -50,9 +53,11 @@ public class getInput {
 		while(true) {
 			if(scanner.hasNextLong()) {
 				number = scanner.nextLong();
+				scanner.nextLine();
 				break;
 			} else {
-				System.out.println("Inserire un numero valido");
+				System.out.println("\u001B[31mInserire un numero valido\u001B[0m");
+				scanner.nextLine();
 			}
 		}
 		return number;

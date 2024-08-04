@@ -1,11 +1,15 @@
 package prontoSoccorsoManagers;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Random;
+
 import consoleMenuUI.Colors;
 import consoleMenuUI.MenuUI;
+import prontoSoccorso.MedCode;
+import prontoSoccorso.Patient;
 import prontoSoccorso.StaffMember;
 import prontoSoccorsoMenu.*;
-import scannerChecks.getInput;
 
 public class DepartmentManager {
 	private final static String datePattern = "dd/MM/yyyy";
@@ -43,6 +47,9 @@ public class DepartmentManager {
 	}
 	
 	private void Test() {
+		
+		Random random = new Random();
+		
 		sMngr.add(new StaffMember("Daniel", "Camuffo", "Test", "test@info.com"));
 		sMngr.add(new StaffMember("Mauro", "Gariazzo", "Test", "test@info.com"));
 		sMngr.add(new StaffMember("Marta", "Chiofalo", "Test", "test@info.com"));
@@ -51,6 +58,13 @@ public class DepartmentManager {
 		sMngr.add(new StaffMember("Emanuele", "", "Test", "test@info.com"));
 		sMngr.add(new StaffMember("Daniele", "", "Test", "test@info.com"));
 		
+		pMngr.add(new Patient("Daniel", "Camuffo", LocalDate.now().minusDays(random.nextLong(30)), MedCode.RED));
+		pMngr.add(new Patient("Mauro", "Gariazzo", LocalDate.now().minusDays(random.nextLong(30)), MedCode.WHITE));
+		pMngr.add(new Patient("Marta", "Chiofalo", LocalDate.now().minusDays(random.nextLong(30)), MedCode.YELLOW));
+		pMngr.add(new Patient("Alessio", "Cappai", LocalDate.now().minusDays(random.nextLong(30)), MedCode.GREEN));
+		pMngr.add(new Patient("Vincenzo", "Tito", LocalDate.now().minusDays(random.nextLong(30)), MedCode.GREEN));
+		pMngr.add(new Patient("Emanuele", "", LocalDate.now().minusDays(random.nextLong(30)), MedCode.RED));
+		pMngr.add(new Patient("Daniele", "",  LocalDate.now().minusDays(random.nextLong(30)), MedCode.YELLOW));
 		System.out.println(toColor("Valori di test inizializzati", Colors.GREEN));
 	}
 }

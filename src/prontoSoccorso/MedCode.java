@@ -12,7 +12,7 @@ public enum MedCode {
 	private static final String currentLocale = Locale.getDefault().toLanguageTag();
 	
 	public static MedCode toMedCode(String s) {
-		if(currentLocale == "it-IT") {
+		if(currentLocale.contentEquals("it-IT")) {
 			if(s.equalsIgnoreCase("bianco")) return MedCode.WHITE;
 			if(s.equalsIgnoreCase("verde")) return MedCode.GREEN;
 			if(s.equalsIgnoreCase("giallo")) return MedCode.YELLOW;
@@ -43,19 +43,19 @@ public enum MedCode {
 	public String toString() {
 		switch(this) {
 			case WHITE:
-				if(currentLocale == "it-IT") return "Bianco";
+				if(currentLocale.contentEquals("it-IT")) return "Bianco";
 				return "White";
 			case GREEN:
-				if(currentLocale == "it-IT") return "Verde";
+				if(currentLocale.contentEquals("it-IT")) return "Verde";
 				return "Green";
 			case YELLOW:
-				if(currentLocale == "it-IT") return "Giallo";
+				if(currentLocale.contentEquals("it-IT")) return "Giallo";
 				return "Yellow";
 			case RED:
-				if(currentLocale == "it-IT") return "Rosso";
+				if(currentLocale.contentEquals("it-IT")) return "Rosso";
 				return "Red";
 			default:
-				return "Color";
+				return "Undefined";
 		}
 	}
 }
