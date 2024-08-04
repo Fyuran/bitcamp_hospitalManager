@@ -2,17 +2,20 @@ package scannerChecks;
 
 import java.util.Scanner;
 
-@SuppressWarnings("unused")
 public class getInput {
-	private static Scanner scanner = new Scanner(System.in);
+	private Scanner scanner = new Scanner(System.in);
 	
-	public static String askLine(String inputMsg) {
+	public static boolean isNumber(String s) {
+		return s.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
+	}
+	
+	public String askLine(String inputMsg) {
 		System.out.println(inputMsg);
 		String line = scanner.nextLine();
 		return line;
 	}
 	
-	public static int askInt(String inputMsg) {
+	public int askInt(String inputMsg) {
 		int number = -1;
 		System.out.println(inputMsg);
 		while(true) {
@@ -27,7 +30,7 @@ public class getInput {
 		return number;
 	}
 	
-	public static double askDouble(String inputMsg) {
+	public double askDouble(String inputMsg) {
 		double number = -1;
 		System.out.println(inputMsg);
 		while(true) {
@@ -41,7 +44,7 @@ public class getInput {
 		return number;
 	}
 	
-	public static long askLong(String inputMsg) {
+	public long askLong(String inputMsg) {
 		long number = -1;
 		System.out.println(inputMsg);
 		while(true) {
@@ -53,5 +56,9 @@ public class getInput {
 			}
 		}
 		return number;
+	}
+	
+	public void close() {
+		scanner.close();
 	}
 }

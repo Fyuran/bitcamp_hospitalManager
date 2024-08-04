@@ -2,30 +2,18 @@ package prontoSoccorso;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class Turn {
-	private int id;
-	private StaffId staffId;
 	private LocalDateTime start;
 	private LocalDateTime end;
-	private Ambulatory ambulatory;
-	private static int idCounter = 1;
+	private List<StaffMember> assignedStaff = new ArrayList<>();
 
-	public Turn(StaffId staffId, LocalDateTime start, LocalDateTime end, Ambulatory ambulatory) {
-		this.id = idCounter++;
-		this.staffId = staffId;
+	public Turn(LocalDateTime start, LocalDateTime end) {
 		this.start = start;
 		this.end = end;
-		this.ambulatory = ambulatory;
-	}
-
-	// Getter e Setter
-	public int getId() {
-		return id;
-	}
-
-	public StaffId getStaffId() {
-		return staffId;
 	}
 
 	public LocalDateTime getStart() {
@@ -36,14 +24,6 @@ public class Turn {
 		return end;
 	}
 
-	public Ambulatory getAmbulatory() {
-		return ambulatory;
-	}
-
-	public void setStaffId(StaffId staffId) {
-		this.staffId = staffId;
-	}
-
 	public void setStart(LocalDateTime start) {
 		this.start = start;
 	}
@@ -52,14 +32,31 @@ public class Turn {
 		this.end = end;
 	}
 
-	public void setAmbulatory(Ambulatory ambulatory) {
-		this.ambulatory = ambulatory;
+	public void addStaff(StaffMember staff) {
+		assignedStaff.add(staff);
+		staff.setTurn(this);
 	}
-
+	
+	public String staffToString() {
+		if(assignedStaff.size() == 0) 
+			return "Nessuno";
+		
+		StringBuilder sb = new StringBuilder();
+		Iterator<StaffMember> it = assignedStaff.listIterator();
+		while(it.hasNext()) {
+			sb.append("\t" + it.next());
+			
+			if(it.hasNext()) //do not add newline char if there are no elements next
+				sb.append("\n");
+		}
+		
+		return sb.toString();
+	}
+	
 	@Override
 	public String toString() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-		return "ID Turno: " + id + ", ID Staff: " + staffId + ", Inizio: " + start.format(formatter) + ", Fine: "
-				+ end.format(formatter) + ", Ambulatorio: " + ambulatory.getName();
+		return "Inizio turno= " + start.format(formatter) + ", Fine turno= "
+				+ end.format(formatter) + ", Personale assegnato=\n" + staffToString();
 	}
 }

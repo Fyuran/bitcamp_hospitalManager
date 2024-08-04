@@ -4,5 +4,5 @@
 /**
  * 
  */
-module com.prontosoccorso {
+module prontoSoccorso {
 }

@@ -1,22 +1,11 @@
 package prontoSoccorso;
 
 public class Ambulatory {
-	private int id;
 	private String name;
 	private boolean available = true;
 
-	public Ambulatory(int id, String name, boolean available) {
-		this.id = id;
+	public Ambulatory(String name) {
 		this.name = name;
-		this.available = available;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getName() {
@@ -37,7 +26,7 @@ public class Ambulatory {
 
 	@Override
 	public String toString() {
-		return "Ambulatory [id=" + id + ", name=" + name + ", available=" + available + "]";
+		return "Ambulatorio nome=" + name + ", disponibile=" + (available?"Si":"No");
 	}
 
 }
