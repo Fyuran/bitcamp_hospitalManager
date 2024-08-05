@@ -21,12 +21,6 @@ public class StaffManager implements CRUD<StaffMember>{
     public boolean remove(int index) {
 		if (index >= 0 && index < list.size()) {
 			if (list.remove(index) != null) {
-				StaffId.reduceCounter();
-
-				// no rearrange is needed if last one is removed
-				if (index != (list.size() - 1)) {
-					rearrangeIds();
-				}
 				return true;
 			}
 		}
@@ -38,12 +32,6 @@ public class StaffManager implements CRUD<StaffMember>{
         for(StaffMember staff : list) {
         	if(staff.getId().toString().equals(id)) {
         		list.remove(staff);
-        		StaffId.reduceCounter();
-        		
-        		//no rearrange is needed if last one is removed
-        		if(!staff.equals(list.get(list.size()-1))) {
-        			rearrangeIds();
-        		}       		
         		return true;
         	}
         }
@@ -92,12 +80,6 @@ public class StaffManager implements CRUD<StaffMember>{
     	}
 		return temp;
 	}
-	
-    private void rearrangeIds() { //IDs will be invalid once an element inside is removed
-    	StaffId.resetCounter();
-    	for(StaffMember p : list)
-    		p.setId(StaffId.increaseCounter());
-    }
     
     public List<StaffMember> getStaff() {
         return list;

@@ -25,7 +25,7 @@ public class DepartmentManager {
 	private StaffManager sMngr = new StaffManager();
 	private PatientManager pMngr = new PatientManager();
 	private TurnManager tMngr = new TurnManager();
-	private EmergencyManager eMngr = new EmergencyManager();
+	private EmergencyManager eMngr = new EmergencyManager(sMngr, tMngr);
 	private AmbulatoryManager aMngr = new AmbulatoryManager();
 	
 	public static void main(String[] args) {

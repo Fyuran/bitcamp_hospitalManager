@@ -26,7 +26,11 @@ public class Turn implements CRUD<StaffMember>{
 		
 		public static TimeSlot getTimeSlot(Turn turn) {
 			LocalDateTime start = turn.getStart();
-			long hour = start.getLong(ChronoField.HOUR_OF_DAY);
+			return getTimeSlot(start);
+		}
+		
+		public static TimeSlot getTimeSlot(LocalDateTime date) {
+			long hour = date.getLong(ChronoField.HOUR_OF_DAY);
 			
 			if(hour >= 7 && hour < 14)
 				return TimeSlot.MORNING;

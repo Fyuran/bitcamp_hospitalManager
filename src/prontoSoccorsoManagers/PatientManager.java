@@ -47,15 +47,8 @@ public class PatientManager implements CRUD<Patient>{
     @Override
     public boolean remove(int index) {
 		if (index >= 0 && index < list.size()) {
-			if (list.remove(index) != null) {
-				PatientId.reduceCounter();
-
-				// no rearrange is needed if last one is removed
-				if (index != (list.size() - 1)) {
-					rearrangeIds();
-				}
+			list.get(index).setDismissed(true);
 				return true;
-			}
 		}
 		return false;
     }
@@ -63,15 +56,8 @@ public class PatientManager implements CRUD<Patient>{
     public boolean remove(Patient patient) {
     	int index = list.indexOf(patient);
 		if (index >= 0 && index < list.size()) {
-			if (list.remove(index) != null) {
-				PatientId.reduceCounter();
-
-				// no rearrange is needed if last one is removed
-				if (index != (list.size() - 1)) {
-					rearrangeIds();
-				}
-				return true;
-			}
+			list.get(index).setDismissed(true);
+			return true;
 		}
 		return false;
     }
@@ -79,25 +65,13 @@ public class PatientManager implements CRUD<Patient>{
     public boolean remove(String id) { //ID are composed as PAX-XXX
         for(Patient patient : list) {
         	if(patient.getId().toString().equals(id)) {
-        		list.remove(patient);
-        		PatientId.reduceCounter();
-        		
-        		//no rearrange is needed if last one is removed
-        		if(!patient.equals(list.get(list.size()-1))) {
-        			rearrangeIds();
-        		}       		
+        		patient.setDismissed(true);    		
         		return true;
         	}
         }
         return false;
     }
-    
-    private void rearrangeIds() { //IDs will be invalid once an element inside is removed
-    	PatientId.resetCounter();
-    	for(Patient p : list)
-    		p.setId(PatientId.increaseCounter());
-    }
-    
+       
 	@Override
 	public boolean update(int index, Patient o) {
 		if (index >= 0 && index < list.size()) {
@@ -118,10 +92,6 @@ public class PatientManager implements CRUD<Patient>{
     public boolean isEmpty() {
     	return list.size() == 0;
     }
-
-	public void assignPatientToEmergency(Patient patient) {
-		
-	}
 	
     public void assignStaffToPatient(StaffMember staff, Patient patient) {
     	int index = list.indexOf(patient);
