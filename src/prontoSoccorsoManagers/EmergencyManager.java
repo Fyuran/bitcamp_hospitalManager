@@ -23,10 +23,6 @@ public class EmergencyManager implements CRUD<Emergency>{
 		this.turnManager = turnManager;
 	}
 
-	void addEmergency(Patient patient) {
-
-	}
-
 	@Override
 	public void add(Emergency o) {
 		// TODO Auto-generated method stub
@@ -68,7 +64,10 @@ public class EmergencyManager implements CRUD<Emergency>{
 		List<Turn> turns = turnManager.filter(p -> p.getSlot().equals(slot));
 		for(Turn turn : turns) {
 			if(date.isAfter(turn.getStart()) && date.isBefore(turn.getEnd())) { //if date is between two dates
-				return turn.getAssignedStaff();
+				List<StaffMember> staffMembers = turn.getAssignedStaff();
+				if(staffMembers.isEmpty()) 
+					return null;
+				return staffMembers;
 			}
 		}
 		return null;
