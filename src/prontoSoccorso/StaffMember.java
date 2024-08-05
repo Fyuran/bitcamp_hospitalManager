@@ -5,7 +5,6 @@ public class StaffMember extends Person {
 
 	private String specialization;
 	private String mail;
-	private Turn turn;
 	
 	public StaffMember(String name, String surname, String specialization, String mail) {
 		super(name, surname);
@@ -14,6 +13,7 @@ public class StaffMember extends Person {
 		this.specialization = specialization;
 		this.mail = mail;
 	}
+
 	public StaffMember(String name, String surname, StaffId id, String specialization, String mail) {
 		super(name, surname);
 		
@@ -21,6 +21,7 @@ public class StaffMember extends Person {
 		this.specialization = specialization;
 		this.mail = mail;
 	}
+
 	public StaffId getId() {
 		return id;
 	}
@@ -36,20 +37,12 @@ public class StaffMember extends Person {
 	public String getMail() {
 		return mail;
 	}
-
-	public Turn getTurn() {
-		return turn;
-	}
-	
-	public void setTurn(Turn turn) {
-		this.turn = turn;
-	}
 	
 	
 	@Override
 	public String toString() {
 		return "Personale: id=" + id + ", nome=" + getName() + ", cognome=" + getSurname() + 
-				", specializzazione=" + specialization + ", mail=" + mail + ", turno=" + (turn==null?"Nessuno":turn);
+				", specializzazione=" + specialization + ", mail=" + mail;
 	}
 	
 }

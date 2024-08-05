@@ -6,17 +6,23 @@ import consoleMenuUI.Colors;
 import consoleMenuUI.MenuUI;
 import prontoSoccorso.MedCode;
 import prontoSoccorso.Patient;
+import prontoSoccorso.StaffMember;
 import prontoSoccorsoManagers.CRUD;
 import prontoSoccorsoManagers.PatientManager;
+import prontoSoccorsoManagers.StaffManager;
 import scannerChecks.getInput;
 
 public class PatientMenu {
 	private final static String notFoundErrorMsg = toColor("Paziente non trovato", Colors.RED);
 	private final static String emptyListErrorMsg = toColor("Lista Pazienti vuota", Colors.RED);
+	private final static String emptyStaffListErrorMsg = toColor("Lista personale vuota", Colors.RED);
+	private final static String staffAlreadyAssignedErrorMsg = toColor("Personale già assegnato a questo paziente", Colors.RED);
+	private final static String staffNotFoundErrorMsg = toColor("Personale non trovato", Colors.RED);
 	
 	private final static String modifiedMsg = toColor("Paziente modificato", Colors.GREEN);
 	private final static String removedMsg = toColor("Paziente rimosso", Colors.GREEN);
 	private final static String dismissedMsg = toColor("Paziente dimesso", Colors.GREEN);
+	private final static String assignedMsg = toColor("Turno assegnato", Colors.GREEN);
 	
 	private final static String[] titles = { "Nome", "Cognome"}; //used for inputs
 	
@@ -25,10 +31,12 @@ public class PatientMenu {
 	}
 	
 	private PatientManager manager;
+	private StaffManager staffManager;
 	private getInput input = new getInput();
 	
-	public PatientMenu(PatientManager manager) {
+	public PatientMenu(PatientManager manager, StaffManager staffManager) {
 		this.manager = manager;
+		this.staffManager = staffManager;
 		
 		MenuUI menu = new MenuUI("Gestione Pazienti");
 		
@@ -66,6 +74,7 @@ public class PatientMenu {
 			
 			chooseMenu.showCmds();
 		});
+		menu.addCmd("Assegna Personale a Paziente", () -> assignStaffMenu());
 		
 		menu.showCmds();
 		
@@ -102,15 +111,115 @@ public class PatientMenu {
 		System.out.println(toColor("Registrato paziente", Colors.GREEN));
 	}
 	
+	private void assignStaffMenu() {
+		if(manager.isEmpty()) {
+			System.out.println(emptyListErrorMsg);
+			return;
+		}
+		if(staffManager.isEmpty()) {
+			System.out.println(emptyStaffListErrorMsg);
+			return;
+		}
+		
+		MenuUI dismissMenu = new MenuUI("Assegna personale a Paziente");
+		dismissMenu.addCmd("Assegna per indice", ()->{
+			if(manager.isEmpty()) {
+				System.out.println(emptyListErrorMsg);
+				return;
+			}
+			if(staffManager.isEmpty()) {
+				System.out.println(emptyStaffListErrorMsg);
+				return;
+			}
+			System.out.println(staffManager);
+			
+			StaffMember chosenStaff = null;
+			while(chosenStaff == null) {
+				int choice = input.askInt(toColor("Inserire l'indice del personale a cui assegnare il paziente", Colors.PURPLE)) - 1;
+				chosenStaff = staffManager.get(choice);
+				if(chosenStaff == null)
+					System.out.println(staffNotFoundErrorMsg);
+			}
+			
+			System.out.println(manager);
+			Patient chosenPatient = null;
+			while(chosenPatient == null) {
+				int choice = input.askInt(toColor("Inserire l'indice del paziente", Colors.PURPLE)) - 1;
+				chosenPatient = manager.get(choice);
+				if(chosenPatient == null)
+					System.out.println(notFoundErrorMsg);
+			}
+			
+			if(!chosenPatient.getAssigned().contains(chosenStaff)) {
+				manager.assignStaffToPatient(chosenStaff, chosenPatient);
+				System.out.println(assignedMsg);				
+			} else {
+				System.out.println(staffAlreadyAssignedErrorMsg);
+			}
+			
+			
+		});
+		dismissMenu.addCmd("Assegna per ID", ()->{
+			
+			if(manager.isEmpty()) {
+				System.out.println(emptyListErrorMsg);
+				return;
+			}
+			if(staffManager.isEmpty()) {
+				System.out.println(emptyStaffListErrorMsg);
+				return;
+			}
+			System.out.println(staffManager);
+			
+			StaffMember chosenStaff = null;
+			while(chosenStaff == null) {
+				String choice = input.askLine(toColor("Inserire l'ID del personale a cui assegnare il paziente", Colors.PURPLE));
+				chosenStaff = staffManager.get(choice);
+				if(chosenStaff == null)
+					System.out.println(staffNotFoundErrorMsg);
+			}
+			
+			System.out.println(manager);
+			Patient chosenPatient = null;
+			while(chosenPatient == null) {
+				String choice = input.askLine(toColor("Inserire l'ID del personale a cui assegnare il paziente", Colors.PURPLE));
+				chosenPatient = manager.get(choice);
+				if(chosenPatient == null)
+					System.out.println(notFoundErrorMsg);
+			}
+			
+			if(!chosenPatient.getAssigned().contains(chosenStaff)) {
+				manager.assignStaffToPatient(chosenStaff, chosenPatient);
+				System.out.println(assignedMsg);				
+			} else {
+				System.out.println(staffAlreadyAssignedErrorMsg);
+			}
+			
+		});
+		dismissMenu.showCmds();
+	}
+	
 	private void viewPatients(boolean isAdmitted) {
 		if(manager.isEmpty()) {
 			System.out.println(emptyListErrorMsg);
 			return;
 		}
-		if(isAdmitted)
-			System.out.println("Lista Personale amesso:" + CRUD.listToString(manager.filter(p -> !p.isDismissed())));
-		else
-			System.out.println("Lista Personale dimesso:" + CRUD.listToString(manager.filter(p -> p.isDismissed())));
+		if(isAdmitted) {
+			List<Patient> temp = manager.filter(p -> !p.isDismissed());
+			if(temp.isEmpty()) {
+				System.out.println(emptyListErrorMsg);
+				return;
+			}
+			System.out.println("Lista Personale amesso:" + CRUD.listToString(temp, 1));
+		}
+		else {
+			List<Patient> temp = manager.filter(p -> p.isDismissed());
+			if(temp.isEmpty()) {
+				System.out.println(emptyListErrorMsg);
+				return;
+			}
+			System.out.println("Lista Personale dimesso:" + CRUD.listToString(temp, 1));
+		}
 	}
 	
 	private void deletePatientsMenu(boolean isAdmitted) {

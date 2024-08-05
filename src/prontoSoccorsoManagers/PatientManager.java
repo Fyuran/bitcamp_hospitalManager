@@ -2,11 +2,13 @@ package prontoSoccorsoManagers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import prontoSoccorso.MedCode;
 import prontoSoccorso.Patient;
 import prontoSoccorso.PatientId;
+import prontoSoccorso.StaffMember;
 
 public class PatientManager implements CRUD<Patient>{
 
@@ -121,9 +123,14 @@ public class PatientManager implements CRUD<Patient>{
 		
 	}
 	
-
+    public void assignStaffToPatient(StaffMember staff, Patient patient) {
+    	int index = list.indexOf(patient);
+    	if (index >= 0 && index < list.size())
+    		list.get(index).assignStaff(staff);
+    }
+    
 	public String toString() {
-		return "Lista pazienti:" + CRUD.listToString(list);
+		return "Lista pazienti:" + CRUD.listToString(list, 1);
 	}
 	
     @Override
@@ -136,4 +143,8 @@ public class PatientManager implements CRUD<Patient>{
 		return temp;
 	}
 
+	@Override
+	public void forEach(Consumer<Patient> c) {
+		list.forEach(c);
+	}
 }

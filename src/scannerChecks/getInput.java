@@ -24,7 +24,7 @@ public class getInput {
 				scanner.nextLine();
 				break;
 			} else {
-				System.out.println("\u001B[31mInserire un numero valido\u001B[0m");
+				System.out.println("\u001B[31m*Inserisci un numero valido*\u001B[0m");
 				scanner.nextLine();
 			}
 		}

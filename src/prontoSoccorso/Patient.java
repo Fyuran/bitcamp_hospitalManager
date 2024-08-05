@@ -13,7 +13,7 @@ public class Patient extends Person {
 	private LocalDate entryDate;
 	private LocalDate exitDate;
 	private MedCode code;
-	private List<StaffMember> assignedStaff = new ArrayList<>();
+	private List<StaffMember> assigned = new ArrayList<>();
 	private boolean isDismissed = false;
 
 	public Patient(String name, String surname, MedCode code) {
@@ -54,11 +54,16 @@ public class Patient extends Person {
 	}
 	
 	public void assignStaff(StaffMember staff) {
-		assignedStaff.add(staff);
+		assigned.add(staff);
 	}
 	
 	public boolean isDismissed() {
 		return isDismissed;
+	}
+
+	
+	public List<StaffMember> getAssigned() {
+		return assigned;
 	}
 
 	public void setDismissed(boolean isDismissed) {
@@ -74,7 +79,7 @@ public class Patient extends Person {
 		DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yy");
 		return "Paziente: id=" + id + ", Nome=" + getName() + ", Cognome=" + getSurname() + 
 				", Ammesso=" + entryDate.format(format) + ", Dimesso=" + (exitDate==null?"N/A":exitDate.format(format)) +
-						", codice=" + code + ", Personale assegnato=" + CRUD.listToString(assignedStaff);
+						", codice=" + code + ", Personale assegnato=" + CRUD.listToString(assigned, 2);
 	}
 
 }

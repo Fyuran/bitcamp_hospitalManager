@@ -1,6 +1,8 @@
 package prontoSoccorsoManagers;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
@@ -9,6 +11,7 @@ import consoleMenuUI.MenuUI;
 import prontoSoccorso.MedCode;
 import prontoSoccorso.Patient;
 import prontoSoccorso.StaffMember;
+import prontoSoccorso.Turn;
 import prontoSoccorsoMenu.*;
 
 public class DepartmentManager {
@@ -29,9 +32,9 @@ public class DepartmentManager {
 		DepartmentManager department = new DepartmentManager();
 		
 		MenuUI mainMenu = new MenuUI("Gestione Pronto Soccorso");
-		mainMenu.addCmd("Gestione Personale", () -> department.ManageStaffMenu());
-		mainMenu.addCmd("Gestione Pazienti", () -> department.managePatientsMenu());
-		mainMenu.addCmd("Gestione Turni", () -> {});
+		mainMenu.addCmd("Gestione Personale", () -> department.staffMenu());
+		mainMenu.addCmd("Gestione Pazienti", () -> department.patientsMenu());
+		mainMenu.addCmd("Gestione Turni", () -> department.turnsMenu());
 		mainMenu.addCmd("Gestione Emergenze", () -> {});
 		mainMenu.addCmd("Gestione Ambulatori", () -> {});
 		mainMenu.addCmd("Test Gestione", () -> department.Test());
@@ -39,19 +42,32 @@ public class DepartmentManager {
 		mainMenu.showCmds();
 	}
 	
-	private void ManageStaffMenu() {
+	private void staffMenu() {
 		new StaffMenu(sMngr);
 	}
-	private void managePatientsMenu() {
-		new PatientMenu(pMngr);
+	private void patientsMenu() {
+		new PatientMenu(pMngr, sMngr);
+	}
+	private void turnsMenu() {
+		new TurnMenu(tMngr, sMngr);
 	}
 	
 	private void Test() {
 		
 		Random random = new Random();
+		tMngr.add(new Turn( //Morning
+				LocalDateTime.of(LocalDate.now(), LocalTime.of(7, 00)),
+				LocalDateTime.of(LocalDate.now(), LocalTime.of(14, 00))
+				));
+		tMngr.add(new Turn( //Morning
+				LocalDateTime.of(LocalDate.now(), LocalTime.of(14, 00)),
+				LocalDateTime.of(LocalDate.now(), LocalTime.of(21, 00))
+				));
+		tMngr.add(new Turn( //Morning
+				LocalDateTime.of(LocalDate.now(), LocalTime.of(21, 00)),
+				LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.of(7, 00))
+				));
 		
-		sMngr.add(new StaffMember("Daniel", "Camuffo", "Test", "test@info.com"));
-		sMngr.add(new StaffMember("Mauro", "Gariazzo", "Test", "test@info.com"));
 		sMngr.add(new StaffMember("Marta", "Chiofalo", "Test", "test@info.com"));
 		sMngr.add(new StaffMember("Alessio", "Cappai", "Test", "test@info.com"));
 		sMngr.add(new StaffMember("Vincenzo", "Tito", "Test", "test@info.com"));
@@ -60,11 +76,9 @@ public class DepartmentManager {
 		
 		pMngr.add(new Patient("Daniel", "Camuffo", LocalDate.now().minusDays(random.nextLong(30)), MedCode.RED));
 		pMngr.add(new Patient("Mauro", "Gariazzo", LocalDate.now().minusDays(random.nextLong(30)), MedCode.WHITE));
-		pMngr.add(new Patient("Marta", "Chiofalo", LocalDate.now().minusDays(random.nextLong(30)), MedCode.YELLOW));
-		pMngr.add(new Patient("Alessio", "Cappai", LocalDate.now().minusDays(random.nextLong(30)), MedCode.GREEN));
-		pMngr.add(new Patient("Vincenzo", "Tito", LocalDate.now().minusDays(random.nextLong(30)), MedCode.GREEN));
-		pMngr.add(new Patient("Emanuele", "", LocalDate.now().minusDays(random.nextLong(30)), MedCode.RED));
-		pMngr.add(new Patient("Daniele", "",  LocalDate.now().minusDays(random.nextLong(30)), MedCode.YELLOW));
+
 		System.out.println(toColor("Valori di test inizializzati", Colors.GREEN));
+		
+		
 	}
 }

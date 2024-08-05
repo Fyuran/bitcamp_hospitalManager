@@ -2,6 +2,7 @@ package prontoSoccorsoManagers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import prontoSoccorso.StaffId;
@@ -109,7 +110,12 @@ public class StaffManager implements CRUD<StaffMember>{
     
 	@Override
 	public String toString() {
-		return "Lista del personale:" + CRUD.listToString(list);
+		return "Lista del personale:" + CRUD.listToString(list, 1);
+	}
+
+	@Override
+	public void forEach(Consumer<StaffMember> c) {
+		list.forEach(c);
 	}
 
 }

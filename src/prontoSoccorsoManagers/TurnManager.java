@@ -2,6 +2,7 @@ package prontoSoccorsoManagers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import prontoSoccorso.StaffMember;
@@ -15,9 +16,15 @@ public class TurnManager implements CRUD<Turn> {
     }
     
     public void assignStaffToTurn(StaffMember staff, int index) {
-    	list.get(index).addStaff(staff);
+    	if (index >= 0 && index < list.size())
+    		list.get(index).add(staff);
     }
-
+    public void assignStaffToTurn(StaffMember staff, Turn turn) {
+    	int index = list.indexOf(turn);
+    	if (index >= 0 && index < list.size())
+    		list.get(index).add(staff);
+    }
+    
 	@Override
 	public void add(Turn o) {
 		list.add(o);
@@ -56,7 +63,7 @@ public class TurnManager implements CRUD<Turn> {
     
 	@Override
 	public String toString() {
-		return "Lista dei turni:" + CRUD.listToString(list);
+		return "Lista dei turni:" + CRUD.listToString(list, 1);
 	}
 
     @Override
@@ -67,5 +74,10 @@ public class TurnManager implements CRUD<Turn> {
     			temp.add(turn);	
     	}
 		return temp;
+	}
+
+	@Override
+	public void forEach(Consumer<Turn> c) {
+		list.forEach(c);
 	}
 }

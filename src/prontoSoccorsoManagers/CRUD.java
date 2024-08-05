@@ -2,6 +2,7 @@ package prontoSoccorsoManagers;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public interface CRUD<T>{
@@ -11,8 +12,9 @@ public interface CRUD<T>{
 	boolean update(int index, T o);
 	boolean isEmpty();
 	List<T> filter(Predicate<T> p);
+	void forEach(Consumer<T> c);
 	
-	static String listToString(List<?> list) {
+	static String listToString(List<?> list, int subIndex) {
 		if(list.size() == 0) 
 			return "Nessuno";
 		
@@ -20,8 +22,13 @@ public interface CRUD<T>{
 		StringBuilder sb = new StringBuilder();
 		
 		int index = 0;
+		
+		String tabulations = ""; //add as many tabulations as subIndex calls
+		for(int i = 0; i < subIndex; i++)
+			tabulations += '\t';
+			
 		while(it.hasNext()) {
-			sb.append("\n\t" + (++index) + ". " + it.next());
+			sb.append("\n" + tabulations + (++index) + ". " + it.next());
 			
 			if(it.hasNext()) //do not add newline char if there are no elements next
 				sb.append("\n");
