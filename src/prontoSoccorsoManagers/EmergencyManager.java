@@ -1,14 +1,14 @@
-package prontoSoccorso;
+package prontoSoccorsoManagers;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-/*import prontoSoccorso.Emergency;
+import prontoSoccorso.Emergency;
 import prontoSoccorso.Patient;
 import prontoSoccorso.StaffMember;
-import prontoSoccorso.Turn;*/
+import prontoSoccorso.Turn;
 import prontoSoccorso.Turn.TimeSlot;
 
 public class EmergencyManager implements CRUD<Emergency>{
