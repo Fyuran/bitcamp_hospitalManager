@@ -23,7 +23,7 @@ public class EmergencyMenu {
 	private final static String modifiedMsg = toColor("Personale modificato", Colors.GREEN);
 	private final static String removedMsg = toColor("Personale rimosso", Colors.GREEN);
 
-	private final static String[] titles = { "Descrizione", "Staff", "Ambulatorio" }; // used for inputs
+	private final static String[] titles = { "Descrizione", "Staff", "Ambulatorio" }; // used for inputs	
 
 	private static String toColor(String text, Colors color) {
 		return Colors.toColor(text, color);
@@ -32,6 +32,7 @@ public class EmergencyMenu {
 	private getInput input = new getInput();
 	private EmergencyManager manager;
 	private AmbulatoryManager ambulatoryManager;
+	private List<Emergency>emergencies = new<Emergency> ArrayList();
 
 	public EmergencyMenu(EmergencyManager manager) {
 		this.manager = manager;
@@ -39,6 +40,7 @@ public class EmergencyMenu {
 		MenuUI menu = new MenuUI("Gestione Personale");
 
 		menu.addCmd("Registra Emergenza", () -> addEmergencyMenu());
+		menu.addCmd("Visualizza Emergenze", () -> viewEmergencies());
 		menu.showCmds();
 	}
 		
@@ -52,16 +54,23 @@ public class EmergencyMenu {
 		 * input.askLine(toColor("Inserire " + titles[i], Colors.PURPLE)); }
 		 */
 
-		createEmergencyObject();
+		emergencies.add(createEmergencyObject());
+	}
+	
+	private void viewEmergencies() {
+		for(Emergency em:emergencies) {
+			System.out.println(em);
+		}
 	}
 
 	private Emergency createEmergencyObject() {
 		String description = obtainEmergencyDescription();
 		List<StaffMember> staffMember = obtainEmergencyStaff();
 		
-		if(staffMember != null) {
+		if(staffMember == null) {
 			return null;
 		}
+
 		Ambulatory ambulatory = obtainAmbulatory();
 		
 		if(ambulatory!=null) {
@@ -72,37 +81,39 @@ public class EmergencyMenu {
 	}
 
 	private String obtainEmergencyDescription() {
-		return input.askLine("Inserisci descrizione emergenza");
+		return input.askLine(toColor("Inserisci descrizione emergenza",Colors.PURPLE));
 	}
 
-	private List<StaffMember> obtainEmergencyStaff() {
-		List<StaffMember> staff = new ArrayList<StaffMember>();
-
+	private List<StaffMember> obtainEmergencyStaff() {		
 		LocalDateTime now = LocalDateTime.now();
 		List<StaffMember> turnStaff = manager.filterByTimeSlot(now);
+		List<StaffMember> assignedStaff = new ArrayList<StaffMember>();
 
 		if (turnStaff != null) {
 			printStaff(turnStaff);
 
 			while (true) {
-				int index = input.askInt("Seleziona lo staff, inserisci un numero negativo per terminare l'inserimento");
+				int index = input.askInt(toColor("Seleziona lo staff, inserisci un numero negativo per terminare l'inserimento", Colors.PURPLE));
 				if (index >= 0 && index < turnStaff.size()) {
-					staff.add(turnStaff.get(index));
-				} else if (index < 0 && turnStaff.size() > 0) {
+					assignedStaff.add(turnStaff.get(index));
+					
+				} else if (index < 0 && assignedStaff.size() > 0) {
 					break;
-				} else if (index < 0 && turnStaff.size() == 0) {
-					System.out.println("Devi inserire almeno un membro");
+					
+				} else if (index < 0 && assignedStaff.size() == 0) {
+					System.out.println(toColor("Devi inserire almeno un membro", Colors.RED));
 				}
 
 				else {
-					System.out.println("Input fuori range");
+					System.out.println(toColor("Input fuori range", Colors.RED));
 				}
 			}
 		}
 		else {
-			System.out.println("Nessun operatore trovato");
+			System.out.println(toColor("Nessun operatore trovato", Colors.YELLOW));
 		}
-		return staff;
+
+		return assignedStaff;
 	}
 
 	private Ambulatory obtainAmbulatory() {
@@ -111,13 +122,13 @@ public class EmergencyMenu {
 			printAmbulatory(ambulatories);
 
 			while (true) {
-				int index = input.askInt("Seleziona l'ambulatorio");
+				int index = input.askInt(toColor("Seleziona l'ambulatorio", Colors.PURPLE));
 				if (index >= 0 && index < ambulatories.size()) {
 					return ambulatories.get(index);
 				}
 
 				else {
-					System.out.println("Input non compreso nel range");
+					System.out.println(toColor("Input non compreso nel range", Colors.RED));
 				}
 			}
 		}
@@ -125,11 +136,10 @@ public class EmergencyMenu {
 	}
 
 	private void printStaff(List<StaffMember> turnStaff) {
-		if (turnStaff != null) {
-			for (StaffMember staffMember : turnStaff) {
-				System.out.println(staffMember);
-			}
+		for (StaffMember staffMember : turnStaff) {
+			System.out.println(staffMember);
 		}
+		
 	}
 
 	private void printAmbulatory(List<Ambulatory> ambulatories) {

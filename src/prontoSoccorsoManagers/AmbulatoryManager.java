@@ -43,7 +43,6 @@ public class AmbulatoryManager {
 			}
 		}
 		return list;
-
 	}
 	
 	public void removeAmbulatory(int index) {

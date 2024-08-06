@@ -52,7 +52,7 @@ public class DepartmentManager {
 	private void turnsMenu() {
 		new TurnMenu(tMngr, sMngr);
 	}
-	private void emergencyMenu() {
+	private void emergencyMenu() {		
 		new EmergencyMenu(eMngr);
 	}
 	private void Test() {
@@ -106,8 +106,6 @@ public class DepartmentManager {
 				sMngr.get(random.nextInt(sMngr.getStaff().size())), 
 				tMngr.get(random.nextInt(tMngr.getTurns().size()))
 				);
-		System.out.println(toColor("Valori di test inizializzati", Colors.GREEN));
-		
-		
+		System.out.println(toColor("Valori di test inizializzati", Colors.GREEN));				
 	}
 }
