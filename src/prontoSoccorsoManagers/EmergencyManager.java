@@ -6,7 +6,6 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import prontoSoccorso.Emergency;
-import prontoSoccorso.Patient;
 import prontoSoccorso.StaffMember;
 import prontoSoccorso.Turn;
 import prontoSoccorso.Turn.TimeSlot;
@@ -70,7 +69,10 @@ public class EmergencyManager implements CRUD<Emergency>{
 		List<Turn> turns = turnManager.filter(p -> p.getSlot().equals(slot));
 		for(Turn turn : turns) {
 			if(date.isAfter(turn.getStart()) && date.isBefore(turn.getEnd())) { //if date is between two dates
-				return turn.getAssignedStaff();
+				List<StaffMember> staffMembers = turn.getAssignedStaff();
+				if(staffMembers.isEmpty())
+					return null;
+				return staffMembers;
 			}
 		}
 		return null;
