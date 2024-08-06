@@ -1,6 +1,7 @@
 package prontoSoccorsoManagers;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -71,7 +72,7 @@ public class EmergencyManager implements CRUD<Emergency>{
 			if(date.isAfter(turn.getStart()) && date.isBefore(turn.getEnd())) { //if date is between two dates
 				List<StaffMember> staffMembers = turn.getAssignedStaff();
 				if(staffMembers.isEmpty())
-					return null;
+					return Collections.emptyList();
 				return staffMembers;
 			}
 		}
