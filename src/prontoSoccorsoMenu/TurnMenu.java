@@ -199,10 +199,7 @@ public class TurnMenu {
 			try {
 				String date = input.askLine("Inserisci la data di inizio nel formato " + datePattern);
 				start = LocalDateTime.parse(date, dateFmt);
-				if(start.isBefore(LocalDateTime.now())) { //check if startDate is before than now()
-					throw new DateTimeParseException("La data di inizio è antecedente alla corrente", date, 5);
-				}
-
+				
 				isValidInput = true;
 			}catch (DateTimeParseException e) {
 				System.out.println(toColor("*Inserisci una data valida*", Colors.RED));
