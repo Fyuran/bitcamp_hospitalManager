@@ -11,7 +11,7 @@ public class Emergency {
 	private Ambulatory ambulatory;
 	private List<StaffMember>assignedStaff = new ArrayList<>();
 	
-	public Emergency(String description, Ambulatory ambulatory) {
+	public Emergency(String description, List<StaffMember>staff, Ambulatory ambulatory) {
 		this.description = description;
 		this.startDate = LocalDate.now();
 		this.ambulatory = ambulatory;
