@@ -1,4 +1,5 @@
 package prontoSoccorsoManagers;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,10 +12,10 @@ import prontoSoccorso.StaffMember;
 import prontoSoccorso.Turn;
 import prontoSoccorso.Turn.TimeSlot;
 
-public class EmergencyManager implements CRUD<Emergency>{
-	
+public class EmergencyManager implements CRUD<Emergency> {
+
 	List<Emergency> emergencies = new ArrayList<>();
-	
+
 	StaffManager staffManager;
 	TurnManager turnManager;
 
@@ -26,9 +27,8 @@ public class EmergencyManager implements CRUD<Emergency>{
 	@Override
 	public void add(Emergency o) {
 		emergencies.add(o);
-	}		
-	
-	
+	}
+
 	@Override
 	public Emergency get(int index) {
 		return emergencies.get(index);
@@ -36,14 +36,18 @@ public class EmergencyManager implements CRUD<Emergency>{
 
 	@Override
 	public boolean remove(int index) {
-		emergencies.remove(index);
-		return false;
+		try {
+			emergencies.remove(index);
+			return true;
+		} 
+		catch (Exception ex) {
+			return false;
+		}
 	}
 
 	@Override
 	public boolean update(int index, Emergency o) {
-		if(index >= 0 && index <= emergencies.size()-1)
-		{
+		if (index >= 0 && index <= emergencies.size()) {
 			emergencies.set(index, o);
 			return true;
 		}
@@ -56,31 +60,35 @@ public class EmergencyManager implements CRUD<Emergency>{
 	}
 
 	@Override
-	public List<Emergency> filter(Predicate<Emergency> p) {		
+	public List<Emergency> filter(Predicate<Emergency> p) {
 		List<Emergency> temp = new ArrayList<>();
-    	for(Emergency emergency : emergencies) {
-    		if(p.test(emergency))
-    			temp.add(emergency);	
-    	}
+		for (Emergency emergency : emergencies) {
+			if (p.test(emergency))
+				temp.add(emergency);
+		}
 		return temp;
 	}
 
 	public List<StaffMember> filterByTimeSlot(LocalDateTime date) {
 		TimeSlot slot = TimeSlot.getTimeSlot(date);
 		List<Turn> turns = turnManager.filter(p -> p.getSlot().equals(slot));
-		for(Turn turn : turns) {
-			if(date.isAfter(turn.getStart()) && date.isBefore(turn.getEnd())) { //if date is between two dates
+		for (Turn turn : turns) {
+			if (date.isAfter(turn.getStart()) && date.isBefore(turn.getEnd())) { // if date is between two dates
 				List<StaffMember> staffMembers = turn.getAssignedStaff();
-				if(staffMembers.isEmpty())
+				if (staffMembers.isEmpty())
 					return Collections.emptyList();
 				return staffMembers;
 			}
 		}
-		return null;
+		return new ArrayList<StaffMember>();
 	}
-	
+
 	@Override
 	public void forEach(Consumer<Emergency> e) {
 		emergencies.forEach(e);
+	}
+
+	public List<Emergency> getAll() {
+		return this.emergencies;
 	}
 }

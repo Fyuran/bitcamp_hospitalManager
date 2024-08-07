@@ -17,13 +17,14 @@ import prontoSoccorso.Ambulatory;
 import prontoSoccorso.Emergency;
 
 public class EmergencyMenu {
-	private final static String notFoundErrorMsg = toColor("Personale non trovato", Colors.RED);
-	private final static String emptyListErrorMsg = toColor("Lista personale vuota", Colors.RED);
+	private final static String notFoundErrorMsg = toColor("Emergenza non trovata", Colors.RED);
+	private final static String emptyListErrorMsg = toColor("Lista emergenza vuota", Colors.RED);
 
-	private final static String modifiedMsg = toColor("Personale modificato", Colors.GREEN);
-	private final static String removedMsg = toColor("Personale rimosso", Colors.GREEN);
+	private final static String modifiedMsg = toColor("Emergenza modificata", Colors.GREEN);
+	private final static String removedMsg = toColor("Emergenza rimossa", Colors.GREEN);
 
-	private final static String[] titles = { "Descrizione", "Staff", "Ambulatorio" }; // used for inputs	
+	// private final static String[] titles = { "Descrizione", "Staff",
+	// "Ambulatorio" }; // used for inputs
 
 	private static String toColor(String text, Colors color) {
 		return Colors.toColor(text, color);
@@ -32,59 +33,113 @@ public class EmergencyMenu {
 	private getInput input = new getInput();
 	private EmergencyManager manager;
 	private AmbulatoryManager ambulatoryManager;
-	private List<Emergency>emergencies = new<Emergency> ArrayList();
 
 	public EmergencyMenu(EmergencyManager manager) {
 		this.manager = manager;
 		this.ambulatoryManager = new AmbulatoryManager();
-		MenuUI menu = new MenuUI("Gestione Personale");
+		MenuUI menu = new MenuUI("Gestione Emergenze");
 
 		menu.addCmd("Registra Emergenza", () -> addEmergencyMenu());
-		menu.addCmd("Visualizza Emergenze", () -> viewEmergencies());
+		menu.addCmd("Modifica Emergenza", () -> editEmergencyMenu());
+		menu.addCmd("Elimina Emergenza", () -> deleteEmergencyMenu());
+		menu.addCmd("Visualizza Emergenze", () -> viewEmergenciesMenu());
 		menu.showCmds();
 	}
-		
 
 	private void addEmergencyMenu() {
-		System.out.println(manager.filterByTimeSlot(LocalDateTime.now()));
-		String[] params = new String[titles.length];
-
-		/*
-		 * for (int i = 0; i < titles.length; i++) { params[i] =
-		 * input.askLine(toColor("Inserire " + titles[i], Colors.PURPLE)); }
-		 */
-
-		emergencies.add(createEmergencyObject());
+		List<StaffMember> staff = manager.filterByTimeSlot(LocalDateTime.now());
+		if (staff.size() > 0) {
+			manager.add(createEmergencyObject());
+		} else {
+			System.out.println(toColor("Nessun operatore trovato", Colors.YELLOW));
+		}
 	}
-	
-	private void viewEmergencies() {
-		for(Emergency em:emergencies) {
-			System.out.println(em);
+
+	private void editEmergencyMenu() {
+		viewEmergenciesMenu();
+		if (manager.getAll().size() > 0) {
+			editEmergencyObject();
+		}
+	}
+
+	private void deleteEmergencyMenu() {
+		viewEmergenciesMenu();
+		if (manager.getAll().size() > 0) {
+			deleteEmergencyObject();
+		}
+	}
+
+	private void viewEmergenciesMenu() {
+		if (manager.getAll().size() > 0) {
+			for (Emergency em : manager.getAll()) {
+				System.out.println(em);
+			}
+		}
+		else {
+			System.out.println(toColor("Lista vuota", Colors.RED));
 		}
 	}
 
 	private Emergency createEmergencyObject() {
 		String description = obtainEmergencyDescription();
 		List<StaffMember> staffMember = obtainEmergencyStaff();
-		
-		if(staffMember == null) {
+
+		if (staffMember == null) {
 			return null;
 		}
 
 		Ambulatory ambulatory = obtainAmbulatory();
-		
-		if(ambulatory!=null) {
+
+		if (ambulatory != null) {
 			return new Emergency(description, staffMember, ambulatory);
 		}
-		
 		return null;
 	}
 
-	private String obtainEmergencyDescription() {
-		return input.askLine(toColor("Inserisci descrizione emergenza",Colors.PURPLE));
+	private void editEmergencyObject() {
+		while (true) {
+			int index = input.askInt(toColor("Seleziona l'emergenza che vuoi modificare, premi 0 per uscire: ", Colors.PURPLE));
+
+			if (index > 0 && index <= manager.getAll().size()) {
+				Emergency emergency = createEmergencyObject();
+				if (manager.update(index - 1, emergency)) {
+					System.out.println(modifiedMsg);
+				}
+			} else if (index == 0) {
+				break;
+			}
+
+			else {
+				System.out.println(notFoundErrorMsg);
+			}
+		}
 	}
 
-	private List<StaffMember> obtainEmergencyStaff() {		
+	private void deleteEmergencyObject() {
+		while (true) {
+			int index = input
+					.askInt(toColor("Seleziona l'emergenza che vuoi eliminare, premi 0 per uscire: ", Colors.PURPLE));
+
+			if (index > 0 && index <= manager.getAll().size()) {
+				if (manager.remove(index - 1)) {
+					System.out.println(removedMsg);					
+				}				
+			} 
+			else if (index == 0) {
+				break;
+			}
+
+			else {
+				System.out.println(notFoundErrorMsg);
+			}
+		}
+	}
+
+	private String obtainEmergencyDescription() {
+		return input.askLine(toColor("Inserisci descrizione emergenza", Colors.PURPLE));
+	}
+
+	private List<StaffMember> obtainEmergencyStaff() {
 		LocalDateTime now = LocalDateTime.now();
 		List<StaffMember> turnStaff = manager.filterByTimeSlot(now);
 		List<StaffMember> assignedStaff = new ArrayList<StaffMember>();
@@ -93,26 +148,21 @@ public class EmergencyMenu {
 			printStaff(turnStaff);
 
 			while (true) {
-				int index = input.askInt(toColor("Seleziona lo staff, inserisci un numero negativo per terminare l'inserimento", Colors.PURPLE));
-				if (index >= 0 && index < turnStaff.size()) {
-					assignedStaff.add(turnStaff.get(index));
-					
-				} else if (index < 0 && assignedStaff.size() > 0) {
+				int index = input.askInt(toColor("Seleziona lo staff, premi zero per terminare l'inserimento", Colors.PURPLE));
+				if (index > 0 && index <= turnStaff.size()) {
+					assignedStaff.add(turnStaff.get(index - 1));
+				} else if (index == 0 && assignedStaff.size() > 0) {
 					break;
-					
-				} else if (index < 0 && assignedStaff.size() == 0) {
+				} else if (index == 0 && assignedStaff.size() == 0) {
 					System.out.println(toColor("Devi inserire almeno un membro", Colors.RED));
-				}
-
-				else {
-					System.out.println(toColor("Input fuori range", Colors.RED));
+				} else {
+					System.out.println(toColor("Input fuori range", Colors.YELLOW));
 				}
 			}
-		}
+		} 
 		else {
 			System.out.println(toColor("Nessun operatore trovato", Colors.YELLOW));
 		}
-
 		return assignedStaff;
 	}
 
@@ -123,8 +173,9 @@ public class EmergencyMenu {
 
 			while (true) {
 				int index = input.askInt(toColor("Seleziona l'ambulatorio", Colors.PURPLE));
-				if (index >= 0 && index < ambulatories.size()) {
-					return ambulatories.get(index);
+				if (index > 0 && index <= ambulatories.size()) {
+					System.out.println((toColor("Hai selezionato " + ambulatories.get(index - 1), Colors.GREEN)));
+					return ambulatories.get(index - 1);
 				}
 
 				else {
@@ -139,12 +190,13 @@ public class EmergencyMenu {
 		for (StaffMember staffMember : turnStaff) {
 			System.out.println(staffMember);
 		}
-		
 	}
 
 	private void printAmbulatory(List<Ambulatory> ambulatories) {
+		int index = 1;
 		for (Ambulatory ambulatory : ambulatories) {
-			System.out.println(ambulatory);
+			System.out.println(String.valueOf(index) + ": " + ambulatory);
+			index++;
 		}
 	}
 

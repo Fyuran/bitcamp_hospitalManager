@@ -15,6 +15,7 @@ public class Emergency {
 		this.description = description;
 		this.startDate = LocalDate.now();
 		this.ambulatory = ambulatory;
+		this.assignedStaff = staff;
 	}
 
 	public String getDescription() {
