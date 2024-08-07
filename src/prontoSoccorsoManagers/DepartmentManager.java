@@ -106,6 +106,14 @@ public class DepartmentManager {
 				sMngr.get(random.nextInt(sMngr.getStaff().size())), 
 				tMngr.get(random.nextInt(tMngr.getTurns().size()))
 				);
+		
+		aMngr.addAmbulatory("Ortopedia");
+		aMngr.addAmbulatory("Cardiologia");
+		aMngr.addAmbulatory("Neonatologia");
+		aMngr.addAmbulatory("Geriatria");
+		aMngr.addAmbulatory("Fisioterapia");
+		
+		
 		System.out.println(toColor("Valori di test inizializzati", Colors.GREEN));				
 	}
 }

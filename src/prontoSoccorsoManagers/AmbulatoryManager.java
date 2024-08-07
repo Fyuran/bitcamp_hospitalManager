@@ -12,11 +12,6 @@ public class AmbulatoryManager {
 	// costruttore
 	public AmbulatoryManager() {
 		this.ambulatories = new ArrayList<Ambulatory>();
-		addAmbulatory("Ortopedia");
-		addAmbulatory("Cardiologia");
-		addAmbulatory("Neonatologia");
-		addAmbulatory("Geriatria");
-		addAmbulatory("Fisioterapia");
 	}
 
 	public void addAmbulatory(String name) {
